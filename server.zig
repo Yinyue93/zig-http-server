@@ -47,7 +47,7 @@ fn handleConn(alloc: std.mem.Allocator, conn: net.Server.Connection) !void {
 
     var parts = std.mem.splitSequence(u8, req_line, " ");
     const method = parts.next() orelse return;
-    const path   = parts.next() orelse return;
+    const path = parts.next() orelse return;
 
     try route(alloc, conn.stream, method, path);
 }
@@ -85,7 +85,7 @@ fn route(
         try send(alloc, s, "200 OK", "application/json; charset=utf-8", json);
 
     } else if (std.mem.eql(u8, path, "/time")) {
-        const ts   = std.time.timestamp();
+        const ts = std.time.timestamp();
         var tmp: [128]u8 = undefined;
         const txt = try std.fmt.bufPrint(&tmp,
             "Current Unix timestamp: {}\nDate: {}", .{ ts, ts });

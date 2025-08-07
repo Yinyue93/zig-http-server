@@ -2,29 +2,29 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) void {
     // Standard CLI options (-Dtarget, -Doptimize)
-    const target   = b.standardTargetOptions(.{});
+    const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    // ---- 1.  define a root module ------------------------------------------
+    // ---- 1.  Define a root module ------------------------------------------
     const server_mod = b.createModule(.{
         .root_source_file = b.path("server.zig"),
-        .target   = target,
+        .target = target,
         .optimize = optimize,
     });
 
-    // ---- 2.  build the executable ------------------------------------------
+    // ---- 2.  Build the executable ------------------------------------------
     const exe = b.addExecutable(.{
-        .name        = "server",
+        .name = "server",
         .root_module = server_mod,
     });
-    exe.linkSystemLibrary("ws2_32");       // Winsock 2 for Windows networking
+    exe.linkSystemLibrary("ws2_32"); // Winsock 2 for Windows networking
 
-    // ---- 3.  install on `zig build` ----------------------------------------
+    // ---- 3.  Install on `zig build` ----------------------------------------
     b.installArtifact(exe);
 
-    // ---- 4.  expose `zig build run` ----------------------------------------
+    // ---- 4.  Expose `zig build run` ----------------------------------------
     const run_cmd = b.addRunArtifact(exe);
-    // optional: pass command-line args → run_cmd.addArg("8080");
+    // Optional: Pass command-line args → run_cmd.addArg("8080");
     b.step("run", "Build and launch the HTTP server")
         .dependOn(&run_cmd.step);
 }
